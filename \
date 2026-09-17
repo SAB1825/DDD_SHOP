@@ -1,0 +1,8 @@
+import { AggregateRoot } from '../../../shared/domain/aggregate-root';
+import { ProductId } from '../value-objects/product-id.vo';
+
+export interface ProductProps {
+  id: ProductId;
+}
+
+export class Product extends AggregateRoot {}

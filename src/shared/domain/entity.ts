@@ -1,4 +1,4 @@
-import { UniqueId } from './value-objects/unique-id.vo.js';
+import { UniqueId } from './value-objects/unique-id.vo';
 
 export abstract class Entity<T extends UniqueId = UniqueId> {
   constructor(protected readonly id: T) {}
