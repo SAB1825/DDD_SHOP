@@ -108,6 +108,10 @@ export class DrizzleProductRepository implements ProductRepository {
     return productRows.map((row) => DrizzleProductRepository.toDomain(row));
   }
 
+  async delete(id: ProductId): Promise<void> {
+    await this.db.delete(products).where(eq(products.id, id.getValue()));
+  }
+
   // It converts the domain value(object) to database readable rows
   // Ex:
   // Product:

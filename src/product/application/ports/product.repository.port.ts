@@ -16,6 +16,7 @@ export interface ProductRepository {
   findBySku(sku: Sku): Promise<Product | null>;
   findByName(name: string): Promise<Product | null>;
   findByAll(filters: ProductFilters): Promise<Product[]>;
+  delete(id: ProductId): Promise<void>;
 }
 
 // 1. We are using port and adapters architecture (Hexagonal architecture)
