@@ -6,6 +6,11 @@ import {
   ProductRepository,
 } from '../../ports/product.repository.port';
 import { Product } from '../../../domain/entities/product.entity';
+import { Sku } from '../../../domain/value-objects/sku.vo';
+import {
+  ApplicationException,
+  ApplicationExceptionCode,
+} from '../../../../shared/domain/exception/application.exception';
 
 @CommandHandler(CreateProductCommand)
 export class CreateProductHandler implements ICommandHandler<CreateProductCommand> {
@@ -14,6 +19,24 @@ export class CreateProductHandler implements ICommandHandler<CreateProductComman
     private readonly productRepository: ProductRepository,
   ) {}
   async execute(command: CreateProductCommand): Promise<void> {
+    const existingSku = await this.productRepository.findBySku(
+      Sku.create(command.sku),
+    );
+    if (existingSku) {
+      throw new ApplicationException(
+        `The product with SKU: ${command.sku} alread exists`,
+        ApplicationExceptionCode.CONFLICT,
+      );
+    }
+
+    const existingName = await this.productRepository.findByName(command.name);
+    if (existingName) {
+      throw new ApplicationException(
+        `The product with NAME: ${command.name} alread exists`,
+        ApplicationExceptionCode.CONFLICT,
+      );
+    }
+
     const product = Product.create(
       command.name,
       command.description,

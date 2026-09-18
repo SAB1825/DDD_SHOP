@@ -14,6 +14,7 @@ import { Sku } from '../../domain/value-objects/sku.vo';
 import { Money } from '../../../shared/domain/value-objects/money.vo';
 import { and, eq, lte, SQL } from 'drizzle-orm';
 import { gte } from 'drizzle-orm';
+import { identifier } from '@electric-sql/pglite/template';
 
 @Injectable()
 //It implements the ProductRepository port so that it can have the method that product repository needs
@@ -47,6 +48,28 @@ export class DrizzleProductRepository implements ProductRepository {
       .select()
       .from(products)
       .where(eq(products.id, id.getValue()));
+
+    if (rows.length === 0) return null;
+
+    return DrizzleProductRepository.toDomain(rows[0]);
+  }
+
+  async findBySku(sku: Sku): Promise<Product | null> {
+    const rows = await this.db
+      .select()
+      .from(products)
+      .where(eq(products.sku, sku.getValue()));
+
+    if (rows.length === 0) return null;
+
+    return DrizzleProductRepository.toDomain(rows[0]);
+  }
+
+  async findByName(name: string): Promise<Product | null> {
+    const rows = await this.db
+      .select()
+      .from(products)
+      .where(eq(products.name, name));
 
     if (rows.length === 0) return null;
 
