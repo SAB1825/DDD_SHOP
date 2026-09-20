@@ -27,8 +27,6 @@ import { ConfigService } from '@nestjs/config';
         const activeDatabase =
           configService.getOrThrow<string>('ACTIVE_DATABASE');
 
-        console.log('ACTIVE_DATABASE:', activeDatabase);
-
         return activeDatabase === 'mongodb' ? mongoDb : drizzleDb;
       },
     },

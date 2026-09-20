@@ -40,5 +40,7 @@ export class RegisterCustomerHandler implements ICommandHandler<
       command.lastName,
       command.phone,
     );
+
+    await this.customerRepository.register(customer);
   }
 }
