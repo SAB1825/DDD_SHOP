@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseUUIDPipe,
@@ -13,6 +14,7 @@ import { CustomerResponseDto } from './dtos/register-customer-reponse.dto';
 import { GetCustomerQuery } from '../application/queries/get-customer.query';
 import { Customer } from '../domain/entities/cutomer-entitiy';
 import { ListCustomerQuery } from '../application/queries/list-customer.query';
+import { DeleteCustomerCommand } from '../application/use-cases/delete-user/delete-customer.command';
 
 @Controller('customer')
 export class CustomerController {
@@ -53,6 +55,15 @@ export class CustomerController {
 
     return customers.map((customer) =>
       CustomerResponseDto.fromDomain(customer),
+    );
+  }
+
+  @Delete(':id')
+  async deleteCustomer(
+    @Param('id', new ParseUUIDPipe()) id: string,
+  ): Promise<void> {
+    await this.commandBus.execute<DeleteCustomerCommand, void>(
+      new DeleteCustomerCommand(id),
     );
   }
 }
